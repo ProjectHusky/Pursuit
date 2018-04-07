@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import request
+from flask import jsonify
 from google_maps import Maps
-import json
 app = Flask(__name__)
 gmap = Maps()
 
@@ -9,15 +9,19 @@ gmap = Maps()
 def hello_world():
     return 'Hello World!'
 
-@app.route('/map')
-def get_directions():
-    point_a = request.args.get('point_a')
-    point_b = request.args.get('point_b')
-    print(point_a)
-    print(point_b)
 
-    directions = gmap.get_directions(point_a, point_b)
-    return str(directions)
+@app.route('/map', methods = ['GET'])
+#.com/map?var1="112038"&var2="665"
+def get_directions():
+    a = request.args.get("var1")
+    print(a)
+    b = request.args.get("var2")
+    print(b)
+    raw = gmap.get_directions(a, b)
+    print(type(raw))
+
+    return jsonify(raw)
+
 
 
 if __name__ == '__main__':
