@@ -41,30 +41,17 @@
           </div>
         </nav>
     <!-- <img src="img/logo.png" alt="pursuit logo" height=200px> -->
-    <form>
+    <form id = "loc">
         From: <br>
-        <input type = "text" name="pointa">
+        <input type = "text"  name="var1">
         <br>
         To: <br>
-        <input type = "text" name="pointb">
-        <button class="btn btn-success">Go!</button>
+        <input type = "text" name="var2">
+        <button class="btn btn-success" type="submit">Go!</button>
     </form>
 
     <div id='map' style='width: 1110px; height: 500px;'></div>
   </div>
-    <script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZXlsdW0iLCJhIjoiY2l6eXJ6dzV3MDMzMTJwcXFocThtNzNsbiJ9.pmpavQkzgLOo-I41M0PacA';
-    var map = new mapboxgl.Map({
-    container: 'map',
-    style: "mapbox://styles/mapbox/streets-v9",
-    center: [ -100.977015, 38.662003],
-    zoom: 3
-
-
-    
-    });
-
-    </script>
   <script src="index.js"></script>
 </body>
 </html>
