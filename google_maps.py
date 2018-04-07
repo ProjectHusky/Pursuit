@@ -1,5 +1,4 @@
 import googlemaps
-from datetime import datetime
 import config
 import pprint
 
@@ -23,13 +22,17 @@ class Maps:
         #                                      departure_time=now)
 
     def get_directions(self, point_a, point_b):
-        point_a_geocode = self.gmaps.geocode(point_a)
-        point_b_geocode = self.gmaps.geocode(point_b)
-        # self.pp.pprint(point_a_geocode)
-        # self.pp.pprint(point_b_geocode)
-        return self.gmaps.directions(origin=point_a, destination=point_b, mode="driving")[0]["legs"]
-
-
+        parsed = []
+        response = self.gmaps.directions(origin=point_a, destination=point_b, mode="driving")[0]["legs"]
+        standard_time = self.standardize_time(response[0]["duration"]["text"])
+        parsed.append(standard_time)
+        directions = self.gmaps.directions(origin=point_a, destination=point_b, mode="driving")[0]["legs"]
+        pp = pprint.PrettyPrinter(indent=2)
+        json = pp.pformat(directions[0]["steps"])
+        parsed.append(json)
+        # Returns the parsed information. Index 0 is the travel time reprsented as a JSON string and index 1 is the
+        # directions represented as a string of JSON.
+        return parsed;
 
     def standardize_time(self, time):
         tokens = time.split(" ")
@@ -47,7 +50,7 @@ class Maps:
             elif unit == "week" or unit == "weeks":
                 duration += float(time_val) * 60 * 24 * 7
 
-        return duration
+        return "{ 'mins': " + str(duration) + ")"
 
 
 
