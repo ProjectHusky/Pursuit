@@ -1,6 +1,8 @@
 "use strict";
 
-
+let state = {
+    locationarray: []
+}
 //your MapBox access tokne
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2FzZXlsdW0iLCJhIjoiY2l6eXJ6dzV3MDMzMTJwcXFocThtNzNsbiJ9.pmpavQkzgLOo-I41M0PacA';
 
@@ -58,15 +60,36 @@ function addMarker(record) {
     let elem = document.createElement("div");
     elem.className = "data-marker";
     let marker = new mapboxgl.Marker(elem);
-    let lnglat = [record.longitude, record.latitude];
+    let lnglat = [record.end_location.lng, record.end_location.lat];
+    getYelp(record.end_location.lng, record.end_location.lat);
     marker.setLngLat(lnglat);
     marker.addTo(map);
     let popup = new mapboxgl.Popup();
-    // let eventDate = new Date(record.event_clearance_date);
-    popup.setText(record.event_clearance_description);
     marker.setPopup(popup);
 }
+function addYMarker(record) {
+    let elem = document.createElement("div");
+    elem.className = "data-marker";
+    let marker1 = new mapboxgl.Marker(elem);
+    let lnglat = [record.coordinates.longitude, record.coordinates.latitude];
+    state.locationarray.push(lnglat);
+    marker1.setLngLat(lnglat);
+    marker1.addTo(map);
+    let popup = new mapboxgl.Popup();
+    popup.setText(record.name);
+    marker1.setPopup(popup);
+}
 
+function getYelp(long, lat) {
+    fetch("http://127.0.0.1:5000/yelp?longitude=" + long + "&latitude=" + lat)
+        .then(handleResponse)
+        .then(data => {
+            console.log(data);
+            for(let i = 0;i < data.businesses.length; i++) {
+                addYMarker(data.businesses[i]);
+            }
+        })
+}
 
     document.querySelector("#loc")
     .addEventListener("submit", function (evt) {
@@ -75,13 +98,38 @@ function addMarker(record) {
         let q2 = document.forms["loc"]["var2"].value;
         console.log("searching for %s", q);
         
-        fetch("/map?var1=" + q + "&var2=" + q2)
+        fetch("http://127.0.0.1:5000/map?var1=" + q + "&var2=" + q2)
             .then(handleResponse)
             .then(data => {
                 console.log(data);
-                for (let i = 0; i < data.length; i++) {
-                    addMarker(data[i]);
+                for (let i = 0; i < data.steps.length; i++) {
+                    addMarker(data.steps[i]);
                 }
+                console.log(state.locationarray);
+                // map.addLayer({
+                //     "id": "route",
+                //     "type": "line",
+                //     "source": {
+                //         "type": "geojson",
+                //         "data": {
+                //             "type": "Feature",
+                //             "properties": {},
+                //             "geometry": {
+                //                 "type": "LineString",
+                //                 "coordinates": 
+                                
+                //             }
+                //         }
+                //     },
+                //     "layout": {
+                //         "line-join": "round",
+                //         "line-cap": "round"
+                //     },
+                //     "paint": {
+                //         "line-color": "#888",
+                //         "line-width": 8
+                //     }
+                // });
             })
             .catch(err => console.error(err));
     });
