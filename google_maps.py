@@ -27,7 +27,9 @@ class Maps:
         point_b_geocode = self.gmaps.geocode(point_b)
         # self.pp.pprint(point_a_geocode)
         # self.pp.pprint(point_b_geocode)
-        return self.gmaps.directions(origin=point_a, destination=point_b, mode="driving")[0]["legs"][0]["steps"]
+        return self.gmaps.directions(origin=point_a, destination=point_b, mode="driving")[0]["legs"]
+
+
 
 
 
