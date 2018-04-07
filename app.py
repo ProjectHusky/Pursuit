@@ -7,7 +7,7 @@ gmap = Maps()
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return app.send_static_file('index.html')
 
 @app.route('/map')
 def get_directions():
