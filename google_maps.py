@@ -31,7 +31,23 @@ class Maps:
 
 
 
+    def standardize_time(self, time):
+        tokens = time.split(" ")
 
+        duration = 0
+        for x in range(1, len(tokens), 2):
+            unit = tokens[x]
+            time_val = tokens[x - 1]
+            if unit == "min" or unit == "mins":
+                duration += float(tokens[x - 1])
+            elif unit == "hours" or unit == "hour":
+                duration += float(time_val) * 60
+            elif unit == "day" or unit == "days":
+                duration += float(time_val) * 60 * 24
+            elif unit == "week" or unit == "weeks":
+                duration += float(time_val) * 60 * 24 * 7
+
+        return duration
 
 
 
