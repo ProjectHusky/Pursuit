@@ -22,17 +22,11 @@ class Maps:
         #                                      departure_time=now)
 
     def get_directions(self, point_a, point_b):
-        parsed = []
         response = self.gmaps.directions(origin=point_a, destination=point_b, mode="driving")[0]["legs"]
         standard_time = self.standardize_time(response[0]["duration"]["text"])
-        parsed.append(standard_time)
-        directions = self.gmaps.directions(origin=point_a, destination=point_b, mode="driving")[0]["legs"]
-        pp = pprint.PrettyPrinter(indent=2)
-        json = pp.pformat(directions[0]["steps"])
-        parsed.append(json)
-        # Returns the parsed information. Index 0 is the travel time reprsented as a JSON string and index 1 is the
-        # directions represented as a string of JSON.
-        return parsed;
+        directions = self.gmaps.directions(origin=point_a, destination=point_b, mode="driving")[0]["legs"][0]
+        directions["time"] = standard_time
+        return directions
 
     def standardize_time(self, time):
         tokens = time.split(" ")
@@ -50,7 +44,7 @@ class Maps:
             elif unit == "week" or unit == "weeks":
                 duration += float(time_val) * 60 * 24 * 7
 
-        return "{ 'mins': " + str(duration) + ")"
+        return "{ 'mins': " + str(duration) + "}"
 
 
 
