@@ -41,3 +41,5 @@ class DatabaseDriver:
         for table in self.tables:
             self.cursor.execute("DROP TABLE " + table)
 
+    def get_trip(self):
+
