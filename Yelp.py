@@ -26,6 +26,6 @@ class Yelp():
         response = requests.request('GET', url, headers=headers, params=url_params)
         #response = requests.get(req)
         data = response.json()
-        print data
+        print (data)
         #pprint.PrettyPrinter.pprint(data)
         return data
